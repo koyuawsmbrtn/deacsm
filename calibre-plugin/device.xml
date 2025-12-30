@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<adept:deviceInfo xmlns:adept="http://ns.adobe.com/adept">
+  <adept:deviceType>standalone</adept:deviceType>
+  <adept:deviceClass>Desktop</adept:deviceClass>
+  <adept:deviceSerial>c5a132aa3cb1cd4b73aadce88f7df771f7e00543</adept:deviceSerial>
+  <adept:deviceName>anya</adept:deviceName>
+  <adept:version name="hobbes" value="10.0.85385"/>
+  <adept:version name="clientOS" value="Windows 8"/>
+  <adept:version name="clientLocale" value="de"/>
+  <adept:fingerprint>liLK3nooygYzMzHziCpqpwgHd7k=</adept:fingerprint>
+</adept:deviceInfo>
