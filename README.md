@@ -47,17 +47,17 @@ Alternatively, if you prefer using your distribution's package manager:
 
 #### Debian/Ubuntu:
 ```bash
-sudo apt-get install python3-pyqt5 python3-lxml python3-crypto python3-requests
+sudo apt-get install python3-pyqt5 python3-lxml python3-crypto python3-requests python3-oscrypto
 ```
 
 #### Fedora:
 ```bash
-sudo dnf install python3-qt5 python3-lxml python3-pycryptodome python3-requests
+sudo dnf install python3-qt5 python3-lxml python3-pycryptodome python3-requests python3-oscrypto
 ```
 
 #### Arch:
 ```bash
-sudo pacman -S python-pyqt5 python-lxml python-pycryptodome python-requests
+sudo pacman -S python-pyqt5 python-lxml python-pycryptodome python-requests python-oscrypto
 ```
 
 ### Step 3: Ensure OpenSSL Legacy Provider is Enabled
