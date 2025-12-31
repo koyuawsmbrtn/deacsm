@@ -1,6 +1,6 @@
 # ACSM/EPUB DRM Handler GUI
 
-A PyQt5-based graphical application for managing Adobe DRM-protected ACSM and EPUB files on Linux. This tool allows you to authorize your Adobe account, fulfill ACSM files to retrieve encrypted eBooks, and decrypt Adobe DRM-protected EPUB files.
+A PyQt5-based graphical application for managing Adobe DRM-protected ACSM and EPUB files on Windows and Linux. This tool allows you to authorize your Adobe account, fulfill ACSM files to retrieve encrypted eBooks, and decrypt Adobe DRM-protected EPUB files.
 
 ## Features
 
@@ -15,7 +15,7 @@ A PyQt5-based graphical application for managing Adobe DRM-protected ACSM and EP
 
 ### System Requirements
 
-- Linux (tested on recent distributions)
+- Windows 10/11 or Linux (tested on recent distributions)
 - Python 3.7 or higher
 - OpenSSL with legacy provider support (see troubleshooting section)
 
@@ -37,25 +37,37 @@ cd deacsm
 
 ### Step 2: Install Python Dependencies
 
-Install the required Python packages:
+#### Windows:
+
+```cmd
+pip install PyQt5 lxml pycryptodomex requests
+```
+
+Or simply run the provided batch file:
+
+```cmd
+launch.bat
+```
+
+#### Linux (pip):
 
 ```bash
 pip3 install PyQt5 lxml pycryptodomex requests
 ```
 
-Alternatively, if you prefer using your distribution's package manager:
+#### Linux (Distribution Package Managers):
 
-#### Debian/Ubuntu:
+##### Debian/Ubuntu:
 ```bash
 sudo apt-get install python3-pyqt5 python3-lxml python3-crypto python3-requests python3-oscrypto
 ```
 
-#### Fedora:
+##### Fedora:
 ```bash
 sudo dnf install python3-qt5 python3-lxml python3-pycryptodome python3-requests python3-oscrypto
 ```
 
-#### Arch:
+##### Arch:
 ```bash
 sudo pacman -S python-pyqt5 python-lxml python-pycryptodome python-requests python-oscrypto
 ```
@@ -67,6 +79,16 @@ If you're using OpenSSL 3.x, the legacy provider (which includes RC2 support nee
 ## Usage
 
 ### Running the Application
+
+#### Windows:
+
+Double-click `gui.pyw` or `launch.bat`, or run:
+
+```cmd
+python gui.pyw
+```
+
+#### Linux:
 
 ```bash
 python3 gui.pyw
@@ -126,6 +148,16 @@ To authorize a different Adobe account:
 
 All authorization data is stored in your home directory:
 
+#### Windows:
+```
+%USERPROFILE%\.deacsm\
+├── devicesalt          # Device key material
+├── device.xml          # Device information
+├── activation.xml      # Adobe activation data
+└── adobekey.der        # Your exported encryption key
+```
+
+#### Linux:
 ```
 ~/.deacsm/
 ├── devicesalt          # Device key material
@@ -145,6 +177,16 @@ All authorization data is stored in your home directory:
 Adobe uses outdated algorithms such as RC2 for its activation protocols. Modern operating systems now compile OpenSSL by default without RC2 support (or disable it in the "Default-Provider" configuration) because RC2 is considered insecure. The Python library oscrypto, which the plugin uses, attempts to access this function and fails.
 
 #### Solution: Enable OpenSSL Legacy Provider
+
+##### Windows:
+
+Windows distributions of Python typically come with OpenSSL configured correctly. If you encounter this error:
+
+1. Ensure you're using an up-to-date Python version (3.9+)
+2. Try reinstalling Python with OpenSSL support enabled
+3. If the problem persists, ensure your OpenSSL installation includes legacy provider support
+
+##### Linux:
 
 ##### Option 1: Using Environment Variable (Quick Fix)
 
@@ -207,14 +249,6 @@ nano ~/.openssl.cnf
 
 ```bash
 OPENSSL_CONF=~/.openssl.cnf python3 gui.pyw
-```
-
-### Error: "Qt platform plugin 'wayland' could not be found"
-
-This occurs on Wayland-based desktop environments. The application is configured to use X11 automatically, but if you still encounter this:
-
-```bash
-QT_QPA_PLATFORM=xcb python3 gui.pyw
 ```
 
 ### Error: "Cannot import module 'ineptepub'"

@@ -13,9 +13,12 @@ import zipfile
 import tempfile
 import getpass
 from pathlib import Path
+import os
 
-# Set the Qt platform to xcb
-os.environ['QT_QPA_PLATFORM'] = 'xcb'
+if os.name == 'nt':
+    os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = "windows"
+else:
+    os.environ['QT_QPA_PLATFORM'] = 'xcb'
 
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QDialog, QWidget, QVBoxLayout, QHBoxLayout,
