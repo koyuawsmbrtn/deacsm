@@ -449,6 +449,59 @@ class MainWindow(QMainWindow):
             self.status_label.setText("Processing failed")
             QMessageBox.critical(self, "Error", message)
     
+    def on_acsm_fulfilled(self, success, message):
+        """Handle ACSM fulfillment completion - then ask where to save"""
+        if not success:
+            self.progress_bar.setVisible(False)
+            self.process_btn.setEnabled(True)
+            self.log(message)
+            self.status_label.setText("Processing failed")
+            QMessageBox.critical(self, "Error", message)
+            return
+        
+        self.log(message)
+        
+        # Now ask where to save the fulfilled EPUB
+        fulfilled_epub = None
+        config_dir = Path.home() / '.deacsm'
+        
+        # Find the recently fulfilled EPUB in config directory
+        epub_files = sorted(config_dir.glob("*.epub"), key=lambda x: x.stat().st_mtime, reverse=True)
+        if epub_files:
+            fulfilled_epub = epub_files[0]
+        
+        if not fulfilled_epub:
+            self.progress_bar.setVisible(False)
+            self.process_btn.setEnabled(True)
+            self.log("Error: Could not find fulfilled EPUB file")
+            self.status_label.setText("Processing failed")
+            QMessageBox.critical(self, "Error", "Could not find fulfilled EPUB file")
+            return
+        
+        # Ask user where to save
+        output_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save fulfilled EPUB as",
+            str(fulfilled_epub),
+            "EPUB Files (*.epub)"
+        )
+        
+        if not output_path:
+            self.progress_bar.setVisible(False)
+            self.process_btn.setEnabled(True)
+            self.status_label.setText("Ready")
+            return
+        
+        # Now decrypt to the chosen location
+        self.log(f"Decrypting to: {output_path}")
+        self.status_label.setText("Decrypting EPUB...")
+        
+        worker = WorkerThread("decrypt", str(fulfilled_epub), str(self.key_file), str(output_path))
+        worker.progress.connect(self.log)
+        worker.finished.connect(self.on_process_complete)
+        self.worker = worker
+        worker.start()
+    
     def process_file(self):
         """Process ACSM or EPUB file"""
         if not self.key_file:
@@ -476,25 +529,18 @@ class MainWindow(QMainWindow):
     
     def process_acsm(self, acsm_path):
         """Process ACSM file"""
-        output_path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save EPUB as",
-            str(acsm_path.stem) + ".epub",
-            "EPUB Files (*.epub)"
-        )
-        
-        if not output_path:
-            return
-        
         self.log(f"Processing ACSM: {acsm_path.name}")
         self.status_label.setText("Processing ACSM...")
         self.progress_bar.setVisible(True)
         self.progress_bar.setMaximum(0)  # Indeterminate progress
         self.process_btn.setEnabled(False)
         
+        # Store ACSM path for later use after fulfillment
+        self.current_acsm_path = acsm_path
+        
         worker = WorkerThread("fulfill", str(acsm_path), str(self.key_file))
         worker.progress.connect(self.log)
-        worker.finished.connect(self.on_process_complete)
+        worker.finished.connect(self.on_acsm_fulfilled)
         self.worker = worker
         worker.start()
     
