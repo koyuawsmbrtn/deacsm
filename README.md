@@ -105,15 +105,12 @@ chmod +x gui.pyw
 
 1. **Launch the application**: `python3 gui.pyw`
 2. **Authorization dialog appears**: You'll be prompted to authorize
-3. **Choose authentication method**:
-   - Select "Adobe Account" to log in with your Adobe ID
-   - Or select "Anonymous (No Account)" for basic device registration
-4. **Enter your credentials**:
+3. **Enter your credentials**:
    - Adobe ID (email)
    - Password
    - ADE Version (ADE 3.0 is recommended and selected by default)
-5. **Click "Authorize"**: The application will create device files and export your encryption key
-6. **Success**: Your keys are saved to `~/.deacsm/` and you won't need to authorize again
+4. **Click "Authorize"**: The application will create device files and export your encryption key
+5. **Success**: Your keys are saved to `~/.deacsm/` and you won't need to authorize again
 
 ### Processing ACSM Files
 
